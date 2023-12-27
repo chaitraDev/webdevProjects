@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dynamic</title>
+    <link rel="stylesheet" href="dynamic_css.css" >
+    <script>
+        const colors = ["red","blue","pink","black","green"];
+        var heights = ["300px","350px","250px","150px","110px"];
+        var boxes = []
+        function create()
+        {
+            var create = document.getElementById("createButton");
+            
+            var sorting = document.getElementById("sortButton");
+            sorting.style.visibility = "visible";
+            var parent = document.getElementById("parent");
+            parent.removeChild(create);
+            // parent.innerText = "";
+            for(var i=0;i<colors.length;i++)
+            {
+                var child = document.createElement("div");
+                child.style.backgroundColor = colors[i];
+                child.style.height = heights[i];
+                child.style.border = "1px solid white";
+                child.setAttribute("class","box");
+                child.setAttribute("id","box"+i);
+                boxes.push(child);
+                parent.appendChild(child);
+            }
+            
+        }
+        
+        function swap(index)
+        {
+            var ele1 = boxes[index],ele2=boxes[index+1];
+            var tempColor = ele1.style.backgroundColor;
+            ele1.style.backgroundColor = ele2.style.backgroundColor;
+            ele2.style.backgroundColor=tempColor;
+            
+            var tempHeight = ele1.style.height;
+            ele1.style.height = ele2.style.height;
+            ele2.style.height=tempHeight;
+
+        }
+        function move(toMove)
+        {
+            var init = toMove.style.height;
+            init = parseInt(init.substring(0,init.length-2));
+            for(var pos=init;pos<(init+30);pos++)
+            {
+                toMove.style.height = pos;
+            }
+            alert("MOVED");
+        }
+        function sort()
+        {
+            var size = 5,delay=200,i=0,ended = false;
+            var parent = document.getElementById("parent");
+            var outer = setInterval(()=>{
+            // for(var i=0;i<5-1;i++)
+            // {
+                if(i==size-1)
+                {
+                    console.log(i);
+                    clearInterval(outer);
+                    ended = true;
+                    clearInterval(inner);
+                    
+                    let child = document.getElementById("sortButton");
+                    parent.removeChild(child);
+                }
+                j=0;
+                        
+                var innerDone = false;
+                if(!ended){
+                    var inner = setInterval(()=>{             
+                        if(j==size-i-1)
+                        {
+                            innerDone=true;
+                            console.log("ended");
+                            clearInterval(inner);
+                        }
+                        var str1 = boxes[j].style.height;//.substring(0,-2);
+                        var height1 = parseInt(str1.substring(0,str1.length-2));
+                        var str2 = boxes[j+1].style.height;//.substring(0,-2);
+                        var height2 = parseInt(str2.substring(0,str2.length-2));
+                        
+                        
+                        if(height1>height2)
+                        {
+                            boxes[j].style.backgroundColor = "grey";
+                            swap(j);//swap in list and swap their properties
+                        }
+                        j++;    
+                    },200)
+
+                    i++;
+                }
+            },delay*10)
+        }
+    </script>
+</head>
+<body>
+    <div id="parent">
+        <button onclick="create()" id="createButton">click to start</button>
+        <button onclick="sort()" id="sortButton"> sort</button>
+    </div>
+</body>
+</html>
